@@ -16,19 +16,14 @@ formatted JSON files end with '_formatted.json'.
 
 
 def main():
-    
-    
-    
-    
-    
-    
-    
+
     def check_path(file_path, list=[]):
+        output = None
         print(os.getcwd())
         current_directory = os.getcwd()
         fiesToBeProcessed = []
         #Check to make sure the file path exits
-        if os.path.exists(file_path):
+        if os.path.exists(file_path) & os.path.isdir(file_path):
             print("File exits")
             list = os.listdir(file_path)
             print(list)
@@ -50,12 +45,31 @@ def main():
                         #    print(f"File that ends with .json {file}")
                             fiesToBeProcessed.append(f"({current_directory}/{file}, {file})")
         #if the path does not exit return path does not exit
+        elif os.path.isfile(file_path):
+           # print(f"Here are the files {file_path}")
+            if file_path.endswith(".json") and not file_path.endswith("_formatted.json"):
+               # print(f"File that ends with .json {file_path}")
+                fiesToBeProcessed.append(f"({current_directory}/{file_path}, {file_path})")
+            elif file_path.endswith("_formatted.json"):
+                output = 2
+                print(output)
         else:
-            print("File path does not exits")
+            print("File does not exit")
+            output = 1
             return 1
         
         print(fiesToBeProcessed)
-    check_path(".")
+
+        def error_handle(check_return):
+            if check_return == 1:
+                exit
+            elif check_return == 2:
+                print("The file provided has alredy been processed")
+        error_handle(output)
+
+    check_path("parse_formatted.json")
+
+   
 
 if __name__ == "__main__":
     main()
