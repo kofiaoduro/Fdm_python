@@ -1,5 +1,5 @@
 import usr_input
-import parse_file
+from parse_file import get_json_content
 import os
 
 #def error_handle(check_return):
@@ -19,55 +19,56 @@ def main():
 
     def check_path(file_path, list=[]):
         output = None
-        print(os.getcwd())
+       #print(os.getcwd())
         current_directory = os.getcwd()
         fiesToBeProcessed = []
         #Check to make sure the file path exits
         if os.path.exists(file_path) & os.path.isdir(file_path):
-            print("File exits")
+           # print("File exits")
             list = os.listdir(file_path)
-            print(list)
         # now we need to check if the files are directories or valid to be processed
             for file in list:
                 if os.path.isdir(file):
-                    print("Here are the folders", file)
+                  #  print("Here are the folders", file)
                     #if its a folder we want to loop over it and list all the files that can be proccesed
-                    print(os.listdir(file))
+                   # print(os.listdir(file))
                     folderFiles = os.listdir(file)
-                    for file in folderFiles:
-                        if file.endswith(".json") and not file.endswith("_formatted.json"):
-                             # print(f"File that ends with .json {file}")
-                               fiesToBeProcessed.append(f"({current_directory}/{file}, {file})")
+                    for file2 in folderFiles:
+                        if file2.endswith(".json") and not file2.endswith("_formatted.json"):
+                              # print(f"File that ends with .json {file2}")
+                               fiesToBeProcessed.append((f"{current_directory}/{file}/{file2}", file2))
                 else:
                     if os.path.isfile(file):
                       #  print(f"Here are the files {file}")
                         if file.endswith(".json") and not file.endswith("_formatted.json"):
                         #    print(f"File that ends with .json {file}")
-                            fiesToBeProcessed.append(f"({current_directory}/{file}, {file})")
+                            fiesToBeProcessed.append((f"{current_directory}/{file}", file))
         #if the path does not exit return path does not exit
         elif os.path.isfile(file_path):
            # print(f"Here are the files {file_path}")
             if file_path.endswith(".json") and not file_path.endswith("_formatted.json"):
                # print(f"File that ends with .json {file_path}")
-                fiesToBeProcessed.append(f"({current_directory}/{file_path}, {file_path})")
+                fiesToBeProcessed.append((f"{current_directory}/{file}", file))
             elif file_path.endswith("_formatted.json"):
                 output = 2
-                print(output)
         else:
-            print("File does not exit")
+           # print("File does not exit")
             output = 1
             return 1
         
-        print(fiesToBeProcessed)
 
         def error_handle(check_return):
             if check_return == 1:
                 exit
             elif check_return == 2:
                 print("The file provided has alredy been processed")
+                exit
         error_handle(output)
 
-    check_path("parse_formatted.json")
+        get_json_content(fiesToBeProcessed)
+        return fiesToBeProcessed
+
+    print(check_path("."))
 
    
 
