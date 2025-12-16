@@ -4,16 +4,24 @@ import os
 #def get_json_content(file):
    
 def get_json_content(files):
+    list = []
     for file in files:
         print(file, "\n")
         with open(file[0], "r") as f:
             text = f.read()
-            print(text)
+            userInfo = json.loads(text)
+            for user in userInfo:
+                (validate_phone_number(user["Phone Number"], list))
+    print(list)
 
 #def validate_phone_number(phone_number):
 
-
-
+def validate_phone_number(phone_number, list):
+    
+    phone_number = phone_number.strip()
+    if len(phone_number) == 10 and phone_number.isdigit():
+        list.append(phone_number)
+    # return list
 
 #def validate_zip(zip_code):
 
