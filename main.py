@@ -1,41 +1,76 @@
 import usr_input
-import parse_file
-
-#Please run main2.py instead of main.py
+from parse_file import get_json_content
+import os
 
 #def error_handle(check_return):
-    
+'''
+key Notes: 
+1)Need to check if the given file path exists, and if not display the message 
+"<file path> does not exist." and return an int of 1.
+2)If the given file path exists and is a folder, check_path needs to 
+check the content of the folder for any valid files. This should work even if there are nested folders.
+3)If the given file path exists and is a file but is already formatted JSON file, 
+it needs to be skipped and an int of 2 returned. The names of already 
+formatted JSON files end with '_formatted.json'.
+'''
 
 
 def main():
-    
-    #Call the get_usr_input to input the file_path
 
-    #Call the check_path function to validate the filePath
-    tup = usr_input.check_path(r'C:\Users\tania.tasmin\testfile.json', [])
-    
-    #Call the error_handle function to display the error messages
-    
-    #Call the start_process Method
-  
+    def check_path(file_path, list=[]):
+        output = None
+       #print(os.getcwd())
+        current_directory = os.getcwd()
+        fiesToBeProcessed = []
+        #Check to make sure the file path exits
+        if os.path.exists(file_path) & os.path.isdir(file_path):
+           # print("File exits")
+            list = os.listdir(file_path)
+        # now we need to check if the files are directories or valid to be processed
+            for file in list:
+                if os.path.isdir(file):
+                  #  print("Here are the folders", file)
+                    #if its a folder we want to loop over it and list all the files that can be proccesed
+                   # print(os.listdir(file))
+                    folderFiles = os.listdir(file)
+                    for file2 in folderFiles:
+                        if file2.endswith(".json") and not file2.endswith("_formatted.json"):
+                              # print(f"File that ends with .json {file2}")
+                               fiesToBeProcessed.append((f"{current_directory}/{file}/{file2}", file2))
+                else:
+                    if os.path.isfile(file):
+                      #  print(f"Here are the files {file}")
+                        if file.endswith(".json") and not file.endswith("_formatted.json"):
+                        #    print(f"File that ends with .json {file}")
+                            fiesToBeProcessed.append((f"{current_directory}/{file}", file))
+        #if the path does not exit return path does not exit
+        elif os.path.isfile(file_path):
+           # print(f"Here are the files {file_path}")
+            if file_path.endswith(".json") and not file_path.endswith("_formatted.json"):
+               # print(f"File that ends with .json {file_path}")
+                fiesToBeProcessed.append((f"{current_directory}/{file}", file))
+            elif file_path.endswith("_formatted.json"):
+                output = 2
+        else:
+           # print("File does not exit")
+            output = 1
+            return 1
+        
 
-    
-#def start_process(tup):
-    
-    #For each of the file in the tuple  
+        def error_handle(check_return):
+            if check_return == 1:
+                exit
+            elif check_return == 2:
+                print("The file provided has alredy been processed")
+                exit
+        error_handle(output)
 
-        #Call the get_json_content to read the content of the file
-        #Call process_each_employee
-        #Call generate_formatted_file
+        get_json_content(fiesToBeProcessed)
+        return fiesToBeProcessed
 
-    #Call the print_output function 
+    print(check_path("."))
 
-
-
-#def print_output(num_files, num_emps):
-    
-
-
+   
 
 if __name__ == "__main__":
     main()
