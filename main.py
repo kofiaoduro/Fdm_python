@@ -1,6 +1,7 @@
 import usr_input
 import parse_file
 
+#Please run main2.py instead of main.py
 
 #def error_handle(check_return):
     
